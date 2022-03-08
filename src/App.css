@@ -1,38 +1,115 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 .App {
+  padding: 2% 5%;
+  min-width: 350px;
+}
+
+header {
+  padding: 5rem;
   text-align: center;
+  background-image: url(./assets/cropped-bg_header21-1.jpg);
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 {
+  color: rgba(0, 0, 0, 0.877);
+  background-color: rgba(0, 0, 0, 0.294);
+  padding: 10px 20px;
+  width: max-content;
+  backdrop-filter: blur(2px);
+  border-radius: 8px;
+  text-shadow: 2px 2px 2px rgba(247, 239, 244, 0.801), 0 0 1px white;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.input-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.input-container input {
+  display: none;
+}
+.input-container label {
+  padding: 8px 21px;
+  border: solid 1px #ccc;
+  background-color: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.section-hunters {
+  margin-top: 2rem;
+  padding: 1% 2%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  gap: 10px;
+  background-color: rgb(233, 233, 233);
+}
+.section-hunters article {
+  background-color: rgba(202, 199, 199, 0.445);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  color: rgb(53, 153, 106);
+  font-size: 1.3rem;
+}
+.section-hunters article p {
+  padding: 5px;
+}
+.section-hunters article span {
+  padding: 5px;
+}
+.points {
+  color: black;
+}
+.articles-container {
+  flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.articles-container article {
+  background-color: cadetblue;
+  padding: 10px 20px;
+  margin: 3px;
+}
+.btn-container {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+}
+.btn,
+.clear {
+  border: none;
+  padding: 8px 16px;
+  background-color: cornflowerblue;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: rgb(49, 103, 204);
+}
+.clear {
+  background-color: rgb(182, 72, 72);
+  color: rgb(255, 255, 255);
 }
 
-.App-link {
-  color: #61dafb;
+.danger {
+  color: brown;
+  font-weight: bolder;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media screen and (max-width: 640px) {
+  .section-hunters {
+    grid-template-columns: repeat(2, 1fr);
   }
-  to {
-    transform: rotate(360deg);
+}
+@media screen and (max-width: 400px) {
+  .section-hunters {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
