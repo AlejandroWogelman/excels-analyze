@@ -6,11 +6,12 @@ import "./app.css";
 function App() {
   const [results, setresults] = useState([]);
   const [files, setFiles] = useState([]);
+  const [total, setTotal] = useState(0);
 
   const readExcel = async (e) => {
     const file = e.target.files[0];
 
-    if (files.includes(file.name)) {
+    if (files?.includes(file.name)) {
       return;
     }
 
@@ -21,18 +22,21 @@ function App() {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
     const jsonData = utils.sheet_to_json(worksheet);
+    console.log(jsonData);
     setFiles([...files, file.name]);
-
+    setTotal((x) => x + jsonData[0].Total);
     handlerSearch(jsonData);
   };
 
   const handlerSearch = (data) => {
     const rename = data.map((val) => {
       const { ["User ID"]: id, Name: name } = val;
+
       return {
         points: counter(val),
         name,
         id,
+        reports: 1,
       };
     });
 
@@ -62,6 +66,7 @@ function App() {
         acc[index] = {
           ...el,
           points: acc[index].points + el.points,
+          reports: acc[index].reports + 1,
         };
 
         return acc;
@@ -78,8 +83,8 @@ function App() {
     } = players;
     const nivel3 = lv3 * 3;
     const nivel2 = lv2 * 1;
-    const nivel4 = lv4 * 8;
-    const nivel5 = lv5 * 15;
+    const nivel4 = lv4 * 6;
+    const nivel5 = lv5 * 12;
 
     return nivel3 + nivel2 + nivel4 + nivel5;
   };
@@ -116,6 +121,7 @@ function App() {
   const clear = () => {
     setresults([]);
     setFiles([]);
+    setTotal(0);
   };
 
   useEffect(() => {}, [results]);
@@ -161,18 +167,26 @@ function App() {
             return <article key={i}>{el}</article>;
           })}
       </section>
+      <h3 style={{ marginTop: "1rem" }}>
+        <p>
+          <strong>
+            Total: <span className="total">{total}</span>
+          </strong>
+        </p>
+      </h3>
       <section className="section-hunters">
         {results.length > 0 &&
-          results.map(({ name, id, points }, i) => {
-            if (name === "Anonymous") {
-              return;
+          results.map(({ name, id, points, reports }, i) => {
+            if (id > 0) {
+              return (
+                <article key={i}>
+                  <p className={points < 5 * reports && "danger"}>{name}</p>
+
+                  <span className="points">Points: {points}</span>
+                  <span style={{ color: "darkgray" }}>Days:{reports}</span>
+                </article>
+              );
             }
-            return (
-              <article key={i}>
-                <p className={points < 5 * files.length && "danger"}>{name}</p>
-                <span className="points">{points}</span>
-              </article>
-            );
           })}
       </section>
     </div>
