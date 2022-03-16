@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { read, utils } from "xlsx";
 
 import "./app.css";
@@ -7,6 +7,14 @@ function App() {
   const [results, setresults] = useState([]);
   const [files, setFiles] = useState([]);
   const [total, setTotal] = useState(0);
+  const [final, setFinal] = useState({});
+
+  const completes = {
+    complete: [],
+    noComplete: [],
+  };
+
+  useCallback(() => {}, [results]);
 
   const readExcel = async (e) => {
     const file = e.target.files[0];
@@ -22,7 +30,7 @@ function App() {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
     const jsonData = utils.sheet_to_json(worksheet);
-    console.log(jsonData);
+
     setFiles([...files, file.name]);
     setTotal((x) => x + jsonData[0].Total);
     handlerSearch(jsonData);
@@ -47,14 +55,6 @@ function App() {
   };
 
   const reduce = (rename) => {
-    const objectArr = [
-      { id: 2, name: "ale2", points: 4 },
-      { id: 1, name: "ale1", points: 2 },
-      { id: 3, name: "ale3", points: 4 },
-      { id: 2, name: "ale2", points: 5 },
-      { id: 5, name: "ale2", points: 1 },
-    ];
-
     const filter = rename.reduce((acc, el) => {
       const search = acc.find((x) => el.id === x.id);
       const index = acc.indexOf(search);
@@ -67,6 +67,7 @@ function App() {
           ...el,
           points: acc[index].points + el.points,
           reports: acc[index].reports + 1,
+          name: el.name,
         };
 
         return acc;
@@ -124,7 +125,25 @@ function App() {
     setTotal(0);
   };
 
-  useEffect(() => {}, [results]);
+  const copyData = (e) => {
+    if (e.target.name === "complete") {
+      e.target.innerText = "Copiado";
+      navigator.clipboard.writeText(final.complete.join(" - "));
+      setTimeout(() => {
+        e.target.innerText = "copiar NO-CUCAS";
+      }, 3000);
+    } else {
+      e.target.innerText = "Copiado";
+      navigator.clipboard.writeText(final.noComplete.join(" - "));
+      setTimeout(() => {
+        e.target.innerText = "copiar CUCAS";
+      }, 3000);
+    }
+  };
+
+  useEffect(() => {
+    setFinal(completes);
+  }, [results]);
 
   return (
     <div className="App">
@@ -174,15 +193,47 @@ function App() {
           </strong>
         </p>
       </h3>
+      <div className="copy-container">
+        {final.complete?.length > 0 && (
+          <button
+            className="btn-copy1"
+            type="button"
+            name="complete"
+            onClick={copyData}
+          >
+            copiar NO-CUCAS
+          </button>
+        )}
+
+        {final.complete?.length > 0 && (
+          <button
+            type="button"
+            className="btn-copy2"
+            name="noComplete"
+            onClick={copyData}
+          >
+            copiar CUCAS
+          </button>
+        )}
+      </div>
+
       <section className="section-hunters">
         {results.length > 0 &&
           results.map(({ name, id, points, reports }, i) => {
             if (id > 0) {
+              points < 5 * reports
+                ? completes.noComplete.push(
+                    `${i} ${name}: ${points}/${reports * 5}`
+                  )
+                : completes.complete.push(`${name}: ${points}/${reports * 5}`);
+
               return (
                 <article key={i}>
                   <p className={points < 5 * reports && "danger"}>{name}</p>
 
-                  <span className="points">Points: {points}</span>
+                  <span className="points">
+                    Points: {`${points}/${reports * 5}`}
+                  </span>
                   <span style={{ color: "darkgray" }}>Days:{reports}</span>
                 </article>
               );

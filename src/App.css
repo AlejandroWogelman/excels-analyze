@@ -67,6 +67,7 @@ h1 {
   color: black;
 }
 .articles-container {
+  min-height: 3rem;
   flex-wrap: wrap;
   display: flex;
   flex-wrap: wrap;
@@ -75,11 +76,42 @@ h1 {
 .articles-container article {
   background-color: cadetblue;
   padding: 10px 20px;
+  height: min-content;
   margin: 3px;
 }
 .btn-container {
   display: flex;
   justify-content: center;
+}
+
+.copy-container {
+  display: grid;
+  justify-items: center;
+  min-height: 2.3rem;
+  padding: 5px;
+  margin-top: 1rem;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  justify-content: center;
+}
+.copy-container button {
+  padding: 10px 10px;
+  width: 90%;
+  margin: 5px;
+  border: none;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.copy-container button:hover {
+  filter: brightness(110%);
+}
+.btn-copy1 {
+  background-color: lightgreen;
+}
+.btn-copy2 {
+  background-color: rgb(204, 70, 96);
 }
 .btn,
 .clear {
